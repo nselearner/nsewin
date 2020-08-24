@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    </head>
+  <body>
+    <h1>Hello, world!</h1>
+	<select id="cars">
+    <option value="11100">11100</option>
+    <option value="11200">11200</option>
+  <option value="11300">11300</option>
+  <option value="11350">11350</option>
+  <option value="11400">11400</option>
+  <option value="11450">11450</option>
+    <option value="11500">11500</option>
+    <option value="11600">11600</option>
+</select>
+  <button id="run">GET CHART</button>
+<div id="chartContainer" style="height: 500px; width: 100%;"></div>
+<script>
+window.onload =function(){ ch()
+
+};
+function ch() {
+
+setInterval(function(){addData(data)}, 20000); 
+
+var dataPoints = [];
+var dataPointer = [];
+var dataP = [];
+var callp = [];
+var putp = [];
+var chart = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: true,
+	theme: "light2",
+	title: {
+		text: "CHANGE IN OI CHART NIFTY"
+	},
+  legend: {
+		cursor:"pointer",
+		itemclick: toggleDataSeries
+	},
+  toolTip: {
+		shared: true
+	},
+  axisX:{
+  // interval: 100,
+ },
+	axisY: {
+		title: "CHANGE IN OI",
+		titleFontSize: 24,
+		includeZero: true
+	},
+  axisY2: {
+		title: "PRICE",
+		includeZero: true,
+    	titleFontSize: 24,
+		prefix: "Rs",
+		//suffix: "%"
+	},
+	data: [{
+		type: "area",
+      	name: "CHANGE IN OI CALLS",
+      	legendText: "CHG OI CALL",
+		showInLegend: true, 
+      	color: "red",
+      	xValueFormatString: "DD MMM hh:mm TT",
+		yValueFormatString: "#,### Contracts",
+		dataPoints: dataPoints
+	},
+          {
+		type: "area",
+        name: "CHANGE IN OI PUTS",
+      	legendText: "CHG OI PUT",
+		showInLegend: true, 
+        color: "green",
+        xValueFormatString: "DD MMM hh:mm TT",
+		yValueFormatString: "#,### Contracts",
+		dataPoints: dataPointer
+	},
+          {
+		type: "line",
+        name: "CALL PRICE",
+      	legendText: "CALL PRICE",
+		showInLegend: true, 
+        color: "blue",
+        lineDashType: "dash",
+        axisYType: "secondary",
+        xValueFormatString: "DD MMM hh:mm TT",
+		yValueFormatString: "#,### Rs",
+		dataPoints: callp
+	},
+          {
+		type: "line",
+        name: "PUT PRICE",
+      	legendText: "PUT PRICE",
+		showInLegend: true, 
+        color: "orange",
+        lineDashType: "dash",
+        axisYType: "secondary",
+        xValueFormatString: "DD MMM hh:mm TT",
+		yValueFormatString: "#,### Rs",
+		dataPoints: putp
+	}
+          ]
+});
+
+function addData(data) {
+  var entry = data.feed.entry;
+  var st = document.getElementById("cars").value;
+	for (var i = 0; i < entry.length; i++) {
+      var strike= entry[i]["gsx$str"]["$t"];
+      if(st==strike){
+     
+		dataPoints.push({
+			x: new Date(entry[i]["gsx$time"]["$t"]),
+			y: Number(entry[i]["gsx$callchginoi"]["$t"])
+		});
+      dataPointer.push({
+			x: new Date(entry[i]["gsx$time"]["$t"]),
+			y: Number(entry[i]["gsx$putchginoi"]["$t"])
+		});
+      callp.push({
+			x: new Date(entry[i]["gsx$time"]["$t"]),
+			y: Number(entry[i]["gsx$callprice"]["$t"])
+		});
+       putp.push({
+			x: new Date(entry[i]["gsx$time"]["$t"]),
+			y: Number(entry[i]["gsx$putprice"]["$t"])
+		});
+      }
+	}
+  //var tit = entry[1]["gsx$str"]["$t"]
+  chart.options.title.text = "CHANGE IN OI CHART STRIKE:"+st;
+	chart.render();
+  
+
+
+
+}
+  
+function toggleDataSeries(e){
+	if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+		e.dataSeries.visible = false;
+	}
+	else{
+		e.dataSeries.visible = true;
+	}
+	chart.render();
+}
+  
+ 
+$.getJSON("https://spreadsheets.google.com/feeds/list/1YGYIwVF102nhRdw0jmQeXlvcP3BogF7F66mVt00NYxY/od6/public/values?alt=json", addData);
+
+
+}
+  
+
+var runButton = document.getElementById("run");
+runButton.addEventListener("click", ch);
+</script>
+<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+
+
+  </body>
+</html>
