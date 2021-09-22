@@ -70,7 +70,7 @@ var sheetrockResultsList = Handlebars.compile($('#compileMe').html());
 
 $('#resultsList').sheetrock({
   url: mySpreadsheet,
-  query: 'select A,B where A is not null ',
+  query: 'select * A is not null ',
   callback : makeSortable
 });
 
