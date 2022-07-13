@@ -42,7 +42,7 @@ var sheetrockResultsList = Handlebars.compile($('#compileMe').html());
 
 $('#resultsList').sheetrock({
   url: mySpreadsheet,
-  query: 'select B,C,D,E,F,H,I,J where A is not null',
+  query: 'select J,B,I,C,D,E,F,H where A is not null',
   callback : makeSortable
 });
 
