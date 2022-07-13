@@ -25,10 +25,15 @@
   <li style="float:right"><a class="active" href="vp.html">WATCHLIST</a></li>
 </ul>
 
-<div style="overflow-x: auto;">
-<table class="compact display" id="resultsList">
+<div>
+<table class="compact display" id="resultsL">
 
 <script id="compileMe" type="text/x-handlebars-template">
+</script>
+</table>
+<table class="compact display" id="resultsList">
+
+<script id="compileM" type="text/x-handlebars-template">
 </script>
 </table>
 </div>
@@ -37,12 +42,21 @@
 <script> 
 
 var mySpreadsheet = 'https://docs.google.com/spreadsheets/d/1K8wfJzFk9PV7s_NGp0GgYrTsAKm0nXUDBCaUgMIJyIM/edit#gid=0';
+var mySpreadsheetW = 'https://docs.google.com/spreadsheets/d/1K8wfJzFk9PV7s_NGp0GgYrTsAKm0nXUDBCaUgMIJyIM/edit#gid=791984775';
 
 var sheetrockResultsList = Handlebars.compile($('#compileMe').html());
+var sheetrockResultsL = Handlebars.compile($('#compileM').html());
+
 
 $('#resultsList').sheetrock({
   url: mySpreadsheet,
   query: 'select A,B where A is not null',
+  callback : makeSortable
+});
+
+$('#resultsL').sheetrock({
+  url: mySpreadsheetW,
+  query: 'select A,B,C,D,E,F,G,H where A is not null',
   callback : makeSortable
 });
 
