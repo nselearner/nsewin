@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sheetrock/1.0.1/dist/sheetrock.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.7/js/jquery.dataTables.min.js"></script>
+     
+
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    
+  </head>
+  <body>
+  <ul>
+  <li><a href="fun.html">FUNDS</a></li>
+  <li><a href="pos.html">POSITION</a></li>
+  
+  <li><a href="hol.html">HOLDINGS</a></li>
+  <li><a href="w1.html">W1</a></li>  
+  <li><a href="w2.html">W2</a></li>
+  <li><a href="w3.html">W3</a></li>
+  <li style="float:right"><a class="active" href="vp.html">W4</a></li>
+</ul>
+
+<div>
+<table class="compact display" id="resultsL">
+
+<script id="compileMe" type="text/x-handlebars-template">
+</script>
+</table>
+<table class="compact display" id="resultsList">
+
+<script id="compileM" type="text/x-handlebars-template">
+</script>
+</table>
+</div>
+
+
+<script> 
+
+var mySpreadsheet = 'https://docs.google.com/spreadsheets/d/1K8wfJzFk9PV7s_NGp0GgYrTsAKm0nXUDBCaUgMIJyIM/edit#gid=1265445672';
+var mySpreadsheetW = 'https://docs.google.com/spreadsheets/d/1K8wfJzFk9PV7s_NGp0GgYrTsAKm0nXUDBCaUgMIJyIM/edit#gid=791984775';
+
+var sheetrockResultsList = Handlebars.compile($('#compileMe').html());
+var sheetrockResultsL = Handlebars.compile($('#compileM').html());
+
+
+$('#resultsList').sheetrock({
+  url: mySpreadsheet,
+  query: 'select A,D,C,E,F where A is not null',
+  callback : makeSortable
+});
+
+$('#resultsL').sheetrock({
+  url: mySpreadsheetW,
+  query: 'select A,B,C,D,E,F,G,H where A is not null',
+  callback : makeSortable
+});
+
+function makeSortable(error, options, response) {
+  // Target is not a jQuery object, so we need to call jQuery
+  // explicitly.
+
+
+  $(options.user.target).DataTable({
+  "pageLength": 100,
+   "paging":   false,
+   "info":     false,
+"order": [[ 0, "desc" ]]
+    
+});
+}
+</script>
+
+<style>
+table, th, td {
+    border: 1px solid blue;
+    border-collapse: collapse;
+}
+
+
+th, td { white-space: nowrap; }
+tr:hover{background-color:#FFFF00}
+
+table#resultsList th {
+    background-color: blue;
+    color: white;
+}
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover:not(.active) {
+  background-color: #111;
+}
+
+.active {
+  background-color: #4CAF50;
+}
+.dataTables_filter, .dataTables_info { display: none; }
+</style>
+</div>
+</div>
+
+</body>
+</html>
