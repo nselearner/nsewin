@@ -174,11 +174,11 @@ function addData(data) {
                 });
        putp.push({
                         x: new Date(entry[i]["time"]),
-                        y: Number(entry[i]["put Price"])
+                        y: Number(entry[i]["Put Price"])
                 });
 		combprem.push({
                         x: new Date(entry[i]["time"]),
-                        y: Number(entry[i]["Call Price"])+Number(entry[i]["put Price"])
+                        y: Number(entry[i]["Call Price"])+Number(entry[i]["Put Price"])
                 });
       }
         }
