@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    </head>
+  <body>
+    
+        <select id="cars" class="custom-select custom-select-lg mb-3" onchange="ch()">
+    <script id="sgxnifty" type="text/x-handlebars-template">
+    <option value="{{cellsArray.[0]}}">{{cellsArray.[0]}}</option>
+   </script>
+</select>
+ <!--- <button id="run"  class="btn btn-primary btn-lg">GET CHART</button> --->
+<div id="chartContainer" style="height: 550px; width: 100%;"></div><br>
+<div  id="chartContainer3"  style="height: 550px; width: 95%;"></div>
+
+  
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.7/js/jquery.dataTables.min.js"></script>
+       
+<script src="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"></script>
+
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.min.js"></script>
+      
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sheetrock/1.0.1/dist/sheetrock.min.js"></script>
+
+<script> 
+
+var mySpreadsheetsgx = 'https://docs.google.com/spreadsheets/d/1eKM4kqcvAV_uLLwu-6SjAYy1bQF9rrNY02g-kPiroHA/edit#gid=0';
+
+// Compile Handlebars template for team RBI leaders.
+var RBITemplatesgx = Handlebars.compile($('#sgxnifty').html());
+
+// Load top five team RBI leaders.
+$('#cars').sheetrock({
+  url: mySpreadsheetsgx,
+  sql: "select B,C",
+  chunkSize: 50,
+  labels: ['TeamName', 'TeamRBI'],
+  rowHandler: RBITemplatesgx
+});
+
+  </script>
+<script>
+window.onload =function(){ ch()
+setInterval(function(){ch()}, 60000); 
+};
+function ch() {
+
+
+
+var dataPoints = [];
+var dataPointer = [];
+var dataP = [];
+var callp = [];
+var putp = [];
+var dataPoints1 = [];
+var dataPointer1 = [];
+var combprem = [];
+var chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+        theme: "light2",
+        title: {
+                text: "CHANGE IN OI CHART NIFTY"
+        },
+  legend: {
+                cursor:"pointer",
+                itemclick: toggleDataSeries
+        },
+  toolTip: {
+                shared: true
+        },
+  axisX:{
+  // interval: 100,
+ },
+        axisY: {
+                title: "CHANGE IN OI",
+                titleFontSize: 24,
+                includeZero: true
+        },
+  axisY2: {
+                title: "PRICE",
+                includeZero: true,
+            titleFontSize: 24,
+                prefix: "Rs",
+                //suffix: "%"
+        },
+        data: [{
+                type: "line",
+              name: "CHANGE IN OI CALLS",
+              legendText: "CHG OI CALL",
+                showInLegend: true, 
+              color: "red",
+              xValueFormatString: "DD MMM hh:mm TT",
+                yValueFormatString: "#,### Contracts",
+                dataPoints: dataPoints
+        },
+          {
+                type: "line",
+        name: "CHANGE IN OI PUTS",
+              legendText: "CHG OI PUT",
+                showInLegend: true, 
+        color: "green",
+        xValueFormatString: "DD MMM hh:mm TT",
+                yValueFormatString: "#,### Contracts",
+                dataPoints: dataPointer
+        },
+          {
+                type: "line",
+        name: "CALL PRICE",
+              legendText: "CALL PRICE",
+                showInLegend: true, 
+        color: "blue",
+        lineDashType: "dash",
+        axisYType: "secondary",
+        xValueFormatString: "DD MMM hh:mm TT",
+                
+                dataPoints: callp
+        },
+		
+		{
+                type: "line",
+        name: "COMBINED PREMIUN",
+              legendText: "COMBINED premium",
+                showInLegend: true, 
+        color: "grey",
+        //lineDashType: "dash",
+        axisYType: "secondary",
+        xValueFormatString: "DD MMM hh:mm TT",
+                
+                dataPoints: combprem
+        },
+          {
+                type: "line",
+        name: "PUT PRICE",
+              legendText: "PUT PRICE",
+                showInLegend: true, 
+        color: "orange",
+        lineDashType: "dash",
+        axisYType: "secondary",
+        xValueFormatString: "DD MMM hh:mm TT",
+                
+                dataPoints: putp
+        }
+          ]
+});
+
+function addData(data) {
+  var entry = data;
+  var st = document.getElementById("cars").value;
+        for (var i = 0; i < entry.length; i++) {
+      var strike= entry[i]["str"];
+      if(st==strike){
+     
+                dataPoints.push({
+                        x: new Date(entry[i]["time"]),
+                        y: Number(entry[i]["Call CHG IN OI"])
+                });
+      dataPointer.push({
+                        x: new Date(entry[i]["time"]),
+                        y: Number(entry[i]["Put CHG IN OI"])
+                });
+      callp.push({
+                        x: new Date(entry[i]["time"]),
+                        y: Number(entry[i]["Call Price"])
+                });
+       putp.push({
+                        x: new Date(entry[i]["time"]),
+                        y: Number(entry[i]["put Price"])
+                });
+		combprem.push({
+                        x: new Date(entry[i]["time"]),
+                        y: Number(entry[i]["Call Price"])+Number(entry[i]["put Price"])
+                });
+      }
+        }
+  //var tit = entry[1]["gsx$str"]["$t"]
+  chart.options.title.text = "CHANGE IN OI CHART STRIKE:"+st;
+        chart.render();
+  
+
+
+
+}
+  
+var chart1 = new CanvasJS.Chart("chartContainer3",
+    {
+        animationEnabled: true,
+        theme: "light2",
+        title: {
+                text: "CHANGE IN OI CHART NIFTY"
+        },
+  legend: {
+                cursor:"pointer",
+                itemclick: toggleDataSeries
+        },
+  toolTip: {
+                shared: true
+        },
+  axisX:{
+   interval: 100,
+ },
+        axisY: {
+                title: "CHANGE IN OI",
+                //titleFontSize: 24,
+                includeZero: true
+        },
+        data: [{
+                type: "column",
+              name: "CHANGE IN OI CALLS",
+              legendText: "CHG OI CALL",
+                showInLegend: true, 
+              color: "red",
+                yValueFormatString: "#,### Contracts",
+                dataPoints: dataPoints1
+        },
+          {
+                type: "column",
+        name: "CHANGE IN OI PUTS",
+              legendText: "CHG OI PUT",
+                showInLegend: true, 
+        color: "green",
+                yValueFormatString: "#,### Contracts",
+                dataPoints: dataPointer1
+        }
+          ]
+    });
+chart1.render();
+function addData1(data) {
+  var entry = data;
+	for (var i = 0; i < entry.length; i++) {
+		dataPoints1.push({
+			x: Number(entry[i]["strike"]),
+			y: Number(entry[i]["CE CHG IN OI"]),
+          	indexLabel: entry[i]["CE Price"],
+          	indexLabelFontColor: "brown",indexLabelOrientation: "vertical", indexLabelPlacement: "outside"
+		});
+      dataPointer1.push({
+			x: Number(entry[i]["strike"]),
+			y: Number(entry[i]["PE CHG IN OI"]),
+        	indexLabel: entry[i]["PE Price"],
+        	indexLabelFontColor: "black",indexLabelOrientation: "vertical", indexLabelPlacement: "outside"
+		});
+        }
+        chart1.render();
+  //chart1.render();
+  
+  
+
+
+
+}
+function toggleDataSeries(e){
+        if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                e.dataSeries.visible = false;
+        }
+        else{
+                e.dataSeries.visible = true;
+        }
+        chart.render();
+}
+  
+$.getJSON("https://opensheet.elk.sh/1YGYIwVF102nhRdw0jmQeXlvcP3BogF7F66mVt00NYxY/Sheet1", addData); 
+$.getJSON("https://opensheet.elk.sh/1QQUq2o2JfYJqfnRSvaY6_qWHgvGrlDbFlkpVJrVfWR8/Sheet1", addData1);
+
+
+
+
+}
+  
+
+var runButton = document.getElementById("run");
+runButton.addEventListener("click", ch);
+</script>
+<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+
+
+  </body>
+</html>
