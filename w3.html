@@ -58,7 +58,7 @@ var sheetrockResultsL = Handlebars.compile($('#compileM').html());
 
 $('#resultsList').sheetrock({
   url: mySpreadsheet,
-  query: 'select M,J,K,L,E,F,H,I where A is not null',
+  query: 'select Q,J,M,N,O,P,K,L,E,F,H,I where A is not null',
   callback : makeSortable
 });
 
@@ -75,7 +75,7 @@ function makeSortable(error, options, response) {
 
   $(options.user.target).DataTable({
   "pageLength": 100,
-   "paging":   false,
+   "paging":   true,
    "info":     false,
 "order": [[ 0, "desc" ]]
     
@@ -124,7 +124,7 @@ li a:hover:not(.active) {
 .active {
   background-color: #4CAF50;
 }
-.dataTables_filter, .dataTables_info { display: none; }
+
 </style>
 </div>
 </div>
